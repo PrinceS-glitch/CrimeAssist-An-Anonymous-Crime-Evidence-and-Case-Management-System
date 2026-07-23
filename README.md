@@ -1,0 +1,2 @@
+# CrimeAssist-An-Anonymous-Crime-Evidence-and-Case-Management-System
+CrimeAssist: An Anonymous Crime Evidence and Case Management System is a console-based application developed using C++ and Object-Oriented Programming (OOP). The primary goal of this project is to provide a structured platform for anonymously reporting crimes, submitting digital evidence, and managing crime-related cases efficiently.
