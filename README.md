@@ -84,3 +84,26 @@ CrimeAssist/
 └── README.md
 ```
 
+## 👥 Group Members
+
+This project was developed as a *3-member group project* by:
+1. *Bikita Baskota*
+2. *Prince Sah*
+3. *Sabak Koirala*
+
+## 🎓 Academic Project
+
+This project was developed as part of the *BCA 2nd Semester* academic project.
+
+## 📜 Project Purpose
+
+CrimeAssist is developed for educational and academic purposes to demonstrate how *Object-Oriented Programming concepts in C++* can be applied to develop a real-world-inspired crime evidence and case management system.
+
+## 🚀 Future Enhancements
+
+* Development of a web-based version.
+* Integration with a secure database.
+* Improved digital evidence storage.
+* User authentication and authorization.
+* Advanced case tracking and notification features.
+* Enhanced security and data protection mechanisms.
