@@ -1,48 +1,198 @@
-#include<iostream>
-#include<string.h>
-#include<stdlib.h>
+#include <iostream>
+#include <string>
+#include <fstream>
+
 using namespace std;
 
-int main(){
-    string choice;
+
+class Admin {
+
+private:
+    string username;
+    string password;
+
+public:
+
+    void adminVerify();
+    void adminMenu();
+    void addOfficer();
+    void updateOfficerInformation();
+    void deleteOfficer();
+};
 
 
-    cout<<"\\\\\\\\\\---MAIN MENU---\\\\\\\\\\"<<endl<<endl;
-    cout<<"a) Admin"<<endl;
-    cout<<"b) Officer"<<endl;
-    cout<<"c) User"<<endl;
-    cout<<"d) Help"<<endl;
-    cout<<"e) Exit"<<endl<<endl;
+void Admin::adminVerify() {
 
-    cout<<"Enter your choice: "<<endl;
-    cin>>choice;
+    cout << "Enter username: ";
+    cin >> username;
 
-    if(choice=="Admin" || choice=="a"){
-        void adminMenu();
+    cout << "\nEnter password: ";
+    cin >> password;
 
+    if (username == "admin" && password == "admin123") {
+
+        cout << "Admin Verified" << endl;
+        cout << "Loading Admin Menu" << endl;
+
+        adminMenu();
     }
-    else if(choice=="Officer" || choice=="b"){
-        void officerMenu();
+    else {
+
+        cout << "Wrong details for admin login" << endl;
+        cout << "Please try again" << endl;
+
+        adminVerify();
+    }
+}
+
+
+void Admin::addOfficer() {
+
+    int officerID;
+    string officerUsername;
+    string officerPassword;
+
+    cout << "\n===== ADD OFFICER =====\n";
+
+    cout << "Enter Officer ID: ";
+    cin >> officerID;
+
+    cout << "Enter Username: ";
+    cin >> officerUsername;
+
+    cout << "Enter Password: ";
+    cin >> officerPassword;
+
+    ofstream file("officer.txt", ios::app);
+
+    if (!file) {
+        cout << "Error opening officer.txt\n";
+        return;
     }
 
-    else if(choice=="User" || choice=="c"){
-        void userMenu();
+    file << officerID << " "
+         << officerUsername << " "
+         << officerPassword << endl;
+
+    file.close();
+
+    cout << "\nOfficer added successfully!\n";
+}
+
+
+void Admin::adminMenu() {
+
+    int choice;
+    int adminChoice;
+
+    cout << "\n////////--- Admin Dashboard ---////////\n";
+
+    cout << "1. Manage Officers" << endl;
+    cout << "2. Review Officer Decisions" << endl;
+    cout << "3. User Review System" << endl;
+    cout << "4. Case Statistics" << endl;
+    cout << "5. Logout" << endl;
+
+    cout << "Enter choice: ";
+    cin >> choice;
+
+    if (choice == 1) {
+
+        cout << "\n1. Add Officer" << endl;
+        cout << "2. Update Officer Information" << endl;
+        cout << "3. Delete Officer" << endl;
+        cout << "4. Return to Dashboard" << endl;
+
+        cout << "Enter choice: ";
+        cin >> adminChoice;
+
+        switch (adminChoice) {
+
+            case 1:
+                addOfficer();
+                break;
+
+            case 2:
+                updateOfficerInformation();
+                break;
+
+            case 3:
+                deleteOfficer();
+                break;
+
+            case 4:
+                adminMenu();
+                break;
+
+            default:
+                cout << "Invalid choice!" << endl;
+        }
     }
-    else if(choice=="Help"|| choice=="d"){
-        void helpMenu();
+}
+
+
+void Admin::updateOfficerInformation() {
+    // We will implement this later
+}
+
+
+void Admin::deleteOfficer() {
+    // We will implement this later
+}
+
+
+void mainMenu() {
+
+    char choice;
+
+    cout << "\\\\\\\\\\\\\\\\\\\\--- MAIN MENU ---\\\\\\\\\\\\\\\\\\\\" << endl << endl;
+
+    cout << "a) Admin" << endl;
+    cout << "b) Officer" << endl;
+    cout << "c) User" << endl;
+    cout << "d) Help" << endl;
+    cout << "e) Exit" << endl << endl;
+
+    cout << "Enter your choice: ";
+    cin >> choice;
+
+    if (choice == 'a' || choice == 'A') {
+
+        Admin admin;
+        admin.adminVerify();
     }
-    else if(choice=="Exit" || choice=="e"){
-        void exit();
+
+    else if (choice == 'b' || choice == 'B') {
+
+        // officerMenu() will be implemented
     }
 
-    else{
-        void exit();
+    else if (choice == 'c' || choice == 'C') {
+
+        // userMenu() will be implemented
     }
 
+    else if (choice == 'd' || choice == 'D') {
+
+        // helpMenu() will be implemented
+    }
+
+    else if (choice == 'e' || choice == 'E') {
+
+        cout << "Exiting CrimeAssist..." << endl;
+        return;
+    }
+
+    else {
+
+        cout << "Invalid choice!" << endl;
+    }
+}
 
 
+int main() {
 
-
+    mainMenu();
 
     return 0;
 }
