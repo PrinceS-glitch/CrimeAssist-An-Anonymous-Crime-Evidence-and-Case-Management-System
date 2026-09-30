@@ -85,55 +85,162 @@ void Admin::adminMenu() {
     int choice;
     int adminChoice;
 
-    cout << "\n////////--- Admin Dashboard ---////////\n";
+    while (true) {
 
-    cout << "1. Manage Officers" << endl;
-    cout << "2. Review Officer Decisions" << endl;
-    cout << "3. User Review System" << endl;
-    cout << "4. Case Statistics" << endl;
-    cout << "5. Logout" << endl;
-
-    cout << "Enter choice: ";
-    cin >> choice;
-
-    if (choice == 1) {
-
-        cout << "\n1. Add Officer" << endl;
-        cout << "2. Update Officer Information" << endl;
-        cout << "3. Delete Officer" << endl;
-        cout << "4. Return to Dashboard" << endl;
+        cout << "\n////////--- Admin Dashboard ---////////\n";
+        cout << "1. Manage Officers" << endl;
+        cout << "2. Review Officer Decisions" << endl;
+        cout << "3. User Review System" << endl;
+        cout << "4. Case Statistics" << endl;
+        cout << "5. Logout" << endl;
 
         cout << "Enter choice: ";
-        cin >> adminChoice;
+        cin >> choice;
 
-        switch (adminChoice) {
+        if (choice == 1) {
 
-            case 1:
-                addOfficer();
-                break;
+            while (true) {
 
-            case 2:
-                updateOfficerInformation();
-                break;
+                cout << "\n===== MANAGE OFFICERS =====\n";
+                cout << "1. Add Officer" << endl;
+                cout << "2. Update Officer Information" << endl;
+                cout << "3. Delete Officer" << endl;
+                cout << "4. Return to Dashboard" << endl;
 
-            case 3:
-                deleteOfficer();
-                break;
+                cout << "Enter choice: ";
+                cin >> adminChoice;
 
-            case 4:
-                adminMenu();
-                break;
+                if (adminChoice == 1) {
 
-            default:
-                cout << "Invalid choice!" << endl;
+                    addOfficer();
+
+                }
+                else if (adminChoice == 2) {
+
+                    updateOfficerInformation();
+
+                }
+                else if (adminChoice == 3) {
+
+                    deleteOfficer();
+
+                }
+                else if (adminChoice == 4) {
+
+                    break;
+
+                }
+                else {
+
+                    cout << "\nInvalid choice!" << endl;
+
+                }
+            }
+        }
+
+        else if (choice == 2) {
+
+            cout << "\nReview Officer Decisions will be implemented later.\n";
+
+        }
+
+        else if (choice == 3) {
+
+            cout << "\nUser Review System will be implemented later.\n";
+
+        }
+
+        else if (choice == 4) {
+
+            cout << "\nCase Statistics will be implemented later.\n";
+
+        }
+
+        else if (choice == 5) {
+
+            cout << "\nLogging out..." << endl;
+            break;
+
+        }
+
+        else {
+
+            cout << "\nInvalid choice!" << endl;
+
         }
     }
 }
 
+   void Admin::updateOfficerInformation() {
 
-void Admin::updateOfficerInformation() {
-    // We will implement this later
+    int officerID;
+    int id;
+    string username;
+    string password;
+    string newUsername;
+    string newPassword;
+
+    cout << "\n===== UPDATE OFFICER INFORMATION =====\n";
+
+    cout << "Enter Officer ID to update: ";
+    cin >> officerID;
+
+    ifstream file("officer.txt");
+
+    if (!file) {
+        cout << "Error opening officer.txt\n";
+        return;
+    }
+
+    ofstream temp("temp.txt");
+
+    if (!temp) {
+        cout << "Error creating temporary file\n";
+        file.close();
+        return;
+    }
+
+    bool found = false;
+
+    while (file >> id >> username >> password) {
+
+        if (id == officerID) {
+
+            found = true;
+
+            cout << "Enter new Username: ";
+            cin >> newUsername;
+
+            cout << "Enter new Password: ";
+            cin >> newPassword;
+
+            temp << id << " "
+                 << newUsername << " "
+                 << newPassword << endl;
+
+        }
+        else {
+
+            temp << id << " "
+                 << username << " "
+                 << password << endl;
+        }
+    }
+
+    file.close();
+    temp.close();
+
+    remove("officer.txt");
+    rename("temp.txt", "officer.txt");
+
+    if (found) {
+        cout << "\nOfficer information updated successfully!\n";
+    }
+    else {
+        cout << "\nOfficer ID not found!\n";
+    }
 }
+
 
 
 void Admin::deleteOfficer() {
