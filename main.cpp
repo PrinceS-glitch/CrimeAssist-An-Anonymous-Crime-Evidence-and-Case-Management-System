@@ -244,7 +244,62 @@ void Admin::adminMenu() {
 
 
 void Admin::deleteOfficer() {
-    // We will implement this later
+
+    int officerID;
+    int id;
+    string username;
+    string password;
+
+    cout << "\n===== DELETE OFFICER =====\n";
+
+    cout << "Enter Officer ID to delete: ";
+    cin >> officerID;
+
+    ifstream file("officer.txt");
+
+    if (!file) {
+        cout << "Error opening officer.txt\n";
+        return;
+    }
+
+    ofstream temp("temp.txt");
+
+    if (!temp) {
+        cout << "Error creating temporary file\n";
+        file.close();
+        return;
+    }
+
+    bool found = false;
+
+    while (file >> id >> username >> password) {
+
+        if (id == officerID) {
+
+            found = true;
+
+            // Do not write this officer to the temporary file
+        }
+        else {
+
+            temp << id << " "
+                 << username << " "
+                 << password << endl;
+        }
+    }
+
+    file.close();
+    temp.close();
+
+    remove("officer.txt");
+    rename("temp.txt", "officer.txt");
+
+    if (found) {
+        cout << "\nOfficer deleted successfully!\n";
+    }
+    else {
+        cout << "\nOfficer ID not found!\n";
+    }
 }
 
 
