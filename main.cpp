@@ -18,6 +18,7 @@ public:
     void addOfficer();
     void updateOfficerInformation();
     void deleteOfficer();
+    void viewVerifiedCases();
 };
 
 
@@ -110,6 +111,14 @@ void Admin::adminMenu() {
                 cout << "Enter choice: ";
                 cin >> adminChoice;
 
+                if (cin.fail()) {
+        cin.clear();
+        cin.ignore(1000, '\n');
+        cout << "\nInvalid input! Please enter a number.\n";
+        continue;
+    }
+
+
                 if (adminChoice == 1) {
 
                     addOfficer();
@@ -140,9 +149,65 @@ void Admin::adminMenu() {
 
         else if (choice == 2) {
 
-            cout << "\nReview Officer Decisions will be implemented later.\n";
+                while (true) {
+                     cout << "\n===== REVIEW OFFICER DECISIONS =====\n";
+
+                    cout << "1. View Verified Cases" << endl;
+                    cout << "2. View Rejected Cases" << endl;                    
+                    cout << "3. Approve Officer Decision" << endl;
+                    cout << "4. Request Reinvestigation" << endl;
+                    cout << "5. Mark Case as Closed" << endl;
+                    cout << "6. Return to Dashboard" << endl;
+
+        
+                    cout << "Enter choice: ";
+                    cin >> adminChoice;
+
+                    if (cin.fail()) {
+        cin.clear();
+        cin.ignore(1000, '\n');
+        cout << "\nInvalid input! Please enter a number.\n";
+        continue;
+    }
+
+
+        if (adminChoice == 1) {
+
+            viewVerifiedCases();
 
         }
+        else if (adminChoice == 2) {
+
+            cout << "\nView Rejected Cases will be implemented later.\n";
+
+        }
+        else if (adminChoice == 3) {
+
+            cout << "\nApprove Officer Decision will be implemented later.\n";
+
+        }
+        else if (adminChoice == 4) {
+
+            cout << "\nRequest Reinvestigation will be implemented later.\n";
+
+        }
+        else if (adminChoice == 5) {
+
+            cout << "\nMark Case as Closed will be implemented later.\n";
+
+        }
+        else if (adminChoice == 6) {
+
+            break;
+
+        }
+        else {
+
+            cout << "\nInvalid choice!" << endl;
+
+        }
+    }
+}
 
         else if (choice == 3) {
 
@@ -299,6 +364,84 @@ void Admin::deleteOfficer() {
     }
     else {
         cout << "\nOfficer ID not found!\n";
+    }
+}
+void Admin::viewVerifiedCases() {
+
+    ifstream file("cases.txt");
+
+    if (!file) {
+        cout << "\nNo case file found.\n";
+        return;
+    }
+
+    string line;
+
+    cout << "\n========== VERIFIED CASES ==========\n";
+
+    bool found = false;
+
+    // Skip the first line containing headings
+    getline(file, line);
+
+    while (getline(file, line)) {
+
+        string caseID;
+        string crimeType;
+        string location;
+        string dateTime;
+        string description;
+        string evidence;
+        string status;
+
+        size_t pos;
+
+        pos = line.find('|');
+        caseID = line.substr(0, pos);
+        line.erase(0, pos + 1);
+
+        pos = line.find('|');
+        crimeType = line.substr(0, pos);
+        line.erase(0, pos + 1);
+
+        pos = line.find('|');
+        location = line.substr(0, pos);
+        line.erase(0, pos + 1);
+
+        pos = line.find('|');
+        dateTime = line.substr(0, pos);
+        line.erase(0, pos + 1);
+
+        pos = line.find('|');
+        description = line.substr(0, pos);
+        line.erase(0, pos + 1);
+
+        pos = line.find('|');
+        evidence = line.substr(0, pos);
+        line.erase(0, pos + 1);
+
+        status = line;
+
+        if (status == "Verified") {
+
+            found = true;
+
+            cout << "\nCase ID: " << caseID << endl;
+            cout << "Crime Type: " << crimeType << endl;
+            cout << "Location: " << location << endl;
+            cout << "Date & Time: " << dateTime << endl;
+            cout << "Description: " << description << endl;
+            cout << "Evidence: " << evidence << endl;
+            cout << "Status: " << status << endl;
+
+            cout << "-----------------------------------\n";
+        }
+    }
+
+    file.close();
+
+    if (!found) {
+        cout << "\nNo verified cases found.\n";
     }
 }
 
