@@ -1,0 +1,4 @@
+CaseID|CrimeType|Location|DateTime|Description|Evidence|Status
+1011111111|djfnve|rfrrrrrrre|fwfwr|frwf|rwfr|Ongoing Investigation
+2|sf|f|ef|e|e|Ongoing Investigation
+5|fr|frf||f|ds|Case Closed
