@@ -69,6 +69,10 @@ void userAuthMenu();
     void viewAllCases();
 };
 
+
+void helpMenu();
+
+
 // common for both officer and admin
 void displayCaseStatistics() {
     ifstream file("cases.txt");
@@ -1114,7 +1118,7 @@ void mainMenu() {
 
     else if (choice == 'd' || choice == 'D') {
 
-        // helpMenu() will be implemented
+        helpMenu();
     }
 
     else if (choice == 'e' || choice == 'E') {
@@ -2134,6 +2138,102 @@ void User::viewAllCases() {
     }
 }
 
+void immediateHelpRequest()
+{
+    int requestID = 1;
+
+    string phoneNumber;
+    string latitude;
+    string longitude;
+
+    cout << "\n===== IMMEDIATE HELP REQUEST =====\n";
+
+    cout << "Enter your Phone Number: ";
+    cin >> phoneNumber;
+
+    cout << "Enter your Latitude: ";
+    cin >> latitude;
+
+    cout << "Enter your Longitude: ";
+    cin >> longitude;
+
+    // Read the previous Request ID from the file
+    ifstream readFile("help_requests.txt");
+    string line;
+    int lastRequestID = 0;
+
+    while (getline(readFile, line))
+    {
+        if (!line.empty())
+        {
+            size_t position = line.find('|');
+
+            if (position != string::npos)
+            {
+                int currentID = stoi(line.substr(0, position));
+
+                if (currentID > lastRequestID)
+                {
+                    lastRequestID = currentID;
+                }
+            }
+        }
+    }
+
+    readFile.close();
+
+    // Generate the next Request ID
+    requestID = lastRequestID + 1;
+
+    // Open file in append mode
+    ofstream file("help_requests.txt", ios::app);
+
+    if (!file)
+    {
+        cout << "Error: Unable to open help_requests.txt\n";
+        return;
+    }
+
+    // Store the help request
+    file << requestID << "|"
+         << phoneNumber << "|"
+         << latitude << "|"
+         << longitude << "|"
+         << "Pending"
+         << endl;
+
+    file.close();
+
+    cout << "\nImmediate help request submitted successfully.\n";
+    cout << "Request ID: " << requestID << endl;
+    cout << "Status: Pending\n";
+}
+void helpMenu()
+{
+    int choice;
+
+    while (true)
+    {
+        cout << "\n========== HELP MENU ==========\n";
+        cout << "1. Immediate Help Request\n";
+        cout << "2. Return to Main Menu\n";
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        if (choice == 1)
+        {
+            immediateHelpRequest();
+        }
+        else if (choice == 2)
+        {
+            return;
+        }
+        else
+        {
+            cout << "Invalid choice. Please try again.\n";
+        }
+    }
+}
 int main() {
 
     mainMenu();
