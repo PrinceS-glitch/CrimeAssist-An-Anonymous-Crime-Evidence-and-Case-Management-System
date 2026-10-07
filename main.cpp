@@ -1,11 +1,92 @@
 #include <iostream>
 #include <string>
 #include <fstream>
-#include <filesystem>         // for timestamp 
+#include <filesystem> 
+#include <limits>        // for timestamp 
 
 using namespace std;
+#ifdef _WIN32
+#include <conio.h>
+#else                          // conditional compilation
+#include <termios.h>          // allows us to control how the terminal behaves
+#include <unistd.h>
+#endif
 
 
+string getPassword()
+{
+    string password;
+    char ch;
+
+#ifdef _WIN32
+
+    while (true)
+    {
+        ch = _getch();
+
+        if (ch == '\r')
+        {
+            break;
+        }
+
+        if (ch == '\b')
+        {
+            if (!password.empty())
+            {
+                password.pop_back();  // removes last character from string
+                cout << "\b \b";
+            }
+        }
+        else
+        {
+            password += ch;
+            cout << '*';
+        }
+    }
+
+#else
+
+    struct termios oldt, newt;
+
+    tcgetattr(STDIN_FILENO, &oldt);          // get current terminal configuration
+    newt = oldt;
+    newt.c_lflag &= ~ECHO;                  // disables echo
+    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+
+    // Remove the newline left by previous cin input
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    while (true)
+    {
+        ch = getchar();
+
+        if (ch == '\n' || ch == '\r')
+        {
+            break;
+        }
+
+        if (ch == 127 || ch == '\b')
+        {
+            if (!password.empty())
+            {
+                password.pop_back();
+                cout << "\b \b";
+            }
+        }
+        else
+        {
+            password += ch;
+            cout << '*';
+        }
+    }
+
+    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+
+#endif
+
+    cout << endl;
+    return password;
+}
 class Admin {
 
 private:
@@ -273,7 +354,9 @@ void Admin::adminVerify() {
     cin >> username;
 
     cout << "\nEnter password: ";
-    cin >> password;
+
+
+    password=getPassword();
 
     if (username == "admin" && password == "admin123") {
 
@@ -307,7 +390,7 @@ void Admin::addOfficer() {
     cin >> officerUsername;
 
     cout << "Enter Password: ";
-    cin >> officerPassword;
+    officerPassword = getPassword();
 
     ofstream file("officer.txt", ios::app);
 
@@ -520,7 +603,7 @@ void Admin::adminMenu() {
             cin >> newUsername;
 
             cout << "Enter new Password: ";
-            cin >> newPassword;
+            newPassword = getPassword();
 
             temp << id << " "
                  << newUsername << " "
@@ -1415,7 +1498,7 @@ void Officer::officerVerify() {
     cin >> enteredUsername;
 
     cout << "Enter Password: ";
-    cin >> enteredPassword;
+    enteredPassword=getPassword();
 
     ifstream file("officer.txt");
 
@@ -1818,7 +1901,7 @@ void User::userVerify() {
     cin >> enteredUsername;
 
     cout << "Enter Password: ";
-    cin >> enteredPassword;
+    enteredPassword=getPassword();
 
     ifstream file("users.txt");
 
@@ -1907,7 +1990,7 @@ void User::userRegister() {
     cin >> newUsername;
 
     cout << "Enter Password: ";
-    cin >> newPassword;
+    newPassword=getPassword();
 
     ifstream checkFile("users.txt");
 
