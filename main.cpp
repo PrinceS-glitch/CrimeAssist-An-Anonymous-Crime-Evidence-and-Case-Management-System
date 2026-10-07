@@ -3,6 +3,9 @@
 #include <fstream>
 #include <filesystem> 
 #include <limits>        // for timestamp 
+#include <thread>        // both thread and chrono for welcome screen 
+#include <chrono>
+
 
 using namespace std;
 #ifdef _WIN32
@@ -152,7 +155,7 @@ void userAuthMenu();
 
 
 void helpMenu();
-
+void welcomeScreen();
 
 // common for both officer and admin
 void displayCaseStatistics() {
@@ -350,18 +353,21 @@ void searchCaseByID() {
 }
 void Admin::adminVerify() {
 
-    cout << "Enter username: ";
-    cin >> username;
+cout << "\n";
+cout << "==========================================================================\n";
+cout << "                         ADMIN LOGIN\n";
+cout << "==========================================================================\n\n";
 
-    cout << "\nEnter password: ";
+cout << "        Username: ";
+cin >> username;
 
-
-    password=getPassword();
+cout << "        Password: ";
+password = getPassword();
 
     if (username == "admin" && password == "admin123") {
 
-        cout << "Admin Verified" << endl;
-        cout << "Loading Admin Menu" << endl;
+        cout << "        Admin Verified" << endl;
+        cout << "        Loading Admin Menu" << endl;
 
         adminMenu();
     }
@@ -416,14 +422,20 @@ void Admin::adminMenu() {
 
     while (true) {
 
-        cout << "\n////////--- Admin Dashboard ---////////\n";
-        cout << "1. Manage Officers" << endl;
-        cout << "2. Review Officer Decisions" << endl;
-        cout << "3. User Review System" << endl;
-        cout << "4. Case Statistics" << endl;
-        cout << "5. Logout" << endl;
+cout << "\n";
+cout << "==========================================================================\n";
+cout << "                         ADMIN DASHBOARD\n";
+cout << "==========================================================================\n\n";
 
-        cout << "Enter choice: ";
+cout << "        [1]  Manage Officers\n";
+cout << "        [2]  Review Officer Decisions\n";
+cout << "        [3]  User Review System\n";
+cout << "        [4]  Case Statistics\n";
+cout << "        [5]  Logout\n";
+
+cout << "\n";
+cout << "--------------------------------------------------------------------------\n";
+cout << "        Enter your choice: ";
         cin >> choice;
 
         if (choice == 1) {
@@ -1170,15 +1182,28 @@ void mainMenu() {
 
     char choice;
 
-    cout << "\\\\\\\\\\\\\\\\\\\\--- MAIN MENU ---\\\\\\\\\\\\\\\\\\\\" << endl << endl;
+cout << "\n";
 
-    cout << "a) Admin" << endl;
-    cout << "b) Officer" << endl;
-    cout << "c) User" << endl;
-    cout << "d) Help" << endl;
-    cout << "e) Exit" << endl << endl;
+cout << "\033[38;5;205mOK\033[0m\n";
+cout << "==========================================================================\n";
+cout << "                         C R I M E A S S I S T\n";
+cout << "==========================================================================\n";
+cout << "\033[0m";
 
-    cout << "Enter your choice: ";
+cout << "\n";
+cout << "                         MAIN MENU\n";
+cout << "\n";
+
+cout << "        [A]  Admin\n";
+cout << "        [B]  Officer\n";
+cout << "        [C]  User\n";
+cout << "        [D]  Help\n";
+cout << "        [E]  Exit\n";
+
+cout << "\n";
+cout << "--------------------------------------------------------------------------\n";
+
+cout << "        Enter your choice: ";
     cin >> choice;
 
     if (choice == 'a' || choice == 'A') {
@@ -1439,15 +1464,21 @@ void Officer::officerMenu() {
 
     while (true) {
 
-        cout << "\n////////--- Officer Dashboard ---////////\n";
-        cout << "1. Case Statistics" << endl;
-        cout << "2. Verify Pending Cases" << endl;
-        cout << "3. Post New Case" << endl;
-        cout << "4. Request Case Closure" << endl;
-        cout << "5. Search Case" << endl;
-        cout << "6. Logout" << endl;
+cout << "\n";
+cout << "==========================================================================\n";
+cout << "                        OFFICER DASHBOARD\n";
+cout << "==========================================================================\n\n";
 
-        cout << "Enter choice: ";
+cout << "        [1]  Case Statistics\n";
+cout << "        [2]  Verify Pending Cases\n";
+cout << "        [3]  Post New Case\n";
+cout << "        [4]  Request Case Closure\n";
+cout << "        [5]  Search Case\n";
+cout << "        [6]  Logout\n";
+
+cout << "\n";
+cout << "--------------------------------------------------------------------------\n";
+cout << "        Enter your choice: ";
         cin >> choice;
 
         if (cin.fail()) {
@@ -1489,16 +1520,19 @@ void Officer::officerVerify() {
     string enteredUsername;
     string enteredPassword;
 
-    cout << "\n========== OFFICER LOGIN ==========\n";
+ cout << "\n";
+cout << "==========================================================================" << endl;
+cout << "                        OFFICER LOGIN" << endl;
+cout << "==========================================================================" << endl << endl;
 
-    cout << "Enter Officer ID: ";
-    cin >> enteredID;
+cout << "        Officer ID: ";
+cin >> enteredID;
 
-    cout << "Enter Username: ";
-    cin >> enteredUsername;
+cout << "        Username: ";
+cin >> enteredUsername;
 
-    cout << "Enter Password: ";
-    enteredPassword=getPassword();
+cout << "        Password: ";
+enteredPassword = getPassword();
 
     ifstream file("officer.txt");
 
@@ -1527,8 +1561,8 @@ void Officer::officerVerify() {
     file.close();
 
     if (found) {
-        cout << "\nOfficer Verified Successfully!" << endl;
-        cout << "Loading Officer Dashboard..." << endl;
+        cout << "\n        Officer Verified Successfully!" << endl;
+        cout << "        Loading Officer Dashboard..." << endl;
 
         officerMenu();
     }
@@ -1895,13 +1929,16 @@ void User::userVerify() {
     string enteredUsername;
     string enteredPassword;
 
-    cout << "\n========== USER LOGIN ==========\n";
+ cout << "\n";
+cout << "==========================================================================\n";
+cout << "                          USER LOGIN\n";
+cout << "==========================================================================\n\n";
 
-    cout << "Enter Username: ";
-    cin >> enteredUsername;
+cout << "        Username: ";
+cin >> enteredUsername;
 
-    cout << "Enter Password: ";
-    enteredPassword=getPassword();
+cout << "        Password: ";
+enteredPassword = getPassword();
 
     ifstream file("users.txt");
 
@@ -1928,8 +1965,8 @@ void User::userVerify() {
 
     if (found) {
 
-        cout << "\nUser Verified Successfully!" << endl;
-        cout << "Loading User Dashboard..." << endl;
+        cout << "\n        User Verified Successfully!" << endl;
+        cout << "        Loading User Dashboard..." << endl;
 
         userMenu();
     }
@@ -1944,13 +1981,19 @@ void User::userMenu() {
 
     while (true) {
 
-        cout << "\n////////--- User Dashboard ---////////\n";
-        cout << "1. Report Crime (Post)" << endl;
-        cout << "2. Search Case" << endl;
-        cout << "3. View All Cases" << endl;
-        cout << "4. Logout" << endl;
+cout << "\n";
+cout << "==========================================================================\n";
+cout << "                          USER DASHBOARD\n";
+cout << "==========================================================================\n\n";
 
-        cout << "Enter choice: ";
+cout << "        [1]  Report Crime(Post) \n";
+cout << "        [2]  Search Case\n";
+cout << "        [3]  View All Cases\n";
+cout << "        [5]  Logout\n";
+
+cout << "\n";
+cout << "--------------------------------------------------------------------------\n";
+cout << "        Enter your choice: ";
         cin >> choice;
 
         if (cin.fail()) {
@@ -1984,13 +2027,16 @@ void User::userRegister() {
     string newUsername;
     string newPassword;
 
-    cout << "\n========== USER REGISTRATION ==========\n";
+cout << "\n";
+cout << "==========================================================================\n";
+cout << "                       USER REGISTRATION\n";
+cout << "==========================================================================\n\n";
 
-    cout << "Enter Username: ";
-    cin >> newUsername;
+cout << "        Username: ";
+cin >> newUsername;
 
-    cout << "Enter Password: ";
-    newPassword=getPassword();
+cout << "        Password: ";
+newPassword = getPassword();
 
     ifstream checkFile("users.txt");
 
@@ -2036,12 +2082,18 @@ void User::userAuthMenu() {
 
     while (true) {
 
-        cout << "\n////////--- User Authentication ---////////\n";
-        cout << "1. Register" << endl;
-        cout << "2. Login" << endl;
-        cout << "3. Return to Main Menu" << endl;
+cout << "\n";
+cout << "==========================================================================\n";
+cout << "                       USER AUTHENTICATION\n";
+cout << "==========================================================================\n\n";
 
-        cout << "Enter choice: ";
+cout << "        [1]  Register\n";
+cout << "        [2]  Login\n";
+cout << "        [3]  Return to Main Menu\n";
+
+cout << "\n";
+cout << "--------------------------------------------------------------------------\n";
+cout << "        Enter your choice: ";
         cin >> choice;
 
         if (cin.fail()) {
@@ -2294,13 +2346,43 @@ void immediateHelpRequest()
 void helpMenu()
 {
     int choice;
+    cout << "\n";
+cout << "==========================================================================\n";
+cout << "                           CRIMEASSIST HELP\n";
+cout << "==========================================================================\n\n";
+
+cout << "        ABOUT THE SYSTEM\n";
+cout << "        ----------------\n";
+cout << "        CrimeAssist is an anonymous crime evidence and case\n";
+cout << "        management system designed to support secure reporting,\n";
+cout << "        evidence handling and case management.\n\n";
+
+cout << "        AVAILABLE MODULES\n";
+cout << "        -----------------\n";
+cout << "        [1]  Admin      - Manage officers and review cases\n";
+cout << "        [2]  Officer    - Verify evidence and manage cases\n";
+cout << "        [3]  User       - Report crimes and track cases\n\n";
+
+cout << "        SECURITY\n";
+cout << "        --------\n";
+cout << "        • User identity is kept anonymous during crime reporting.\n";
+cout << "        • Evidence and case information are stored in system files.\n\n";
+
+cout << "--------------------------------------------------------------------------\n";
 
     while (true)
-    {
-        cout << "\n========== HELP MENU ==========\n";
-        cout << "1. Immediate Help Request\n";
-        cout << "2. Return to Main Menu\n";
-        cout << "Enter your choice: ";
+    { 
+cout << "\n";
+cout << "==========================================================================\n";
+cout << "                              HELP MENU\n";
+cout << "==========================================================================\n\n";
+
+cout << "        [1]  Immediate Help Request\n";
+cout << "        [2]  Return to Main Menu\n";
+
+cout << "\n";
+cout << "--------------------------------------------------------------------------\n";
+cout << "        Enter your choice: ";
         cin >> choice;
 
         if (choice == 1)
@@ -2317,7 +2399,98 @@ void helpMenu()
         }
     }
 }
+void welcomeScreen()
+{
+    system("clear");
+
+    cout << "\n";
+
+    cout << "  ██████╗██████╗ ██╗███╗   ███╗███████╗ █████╗ ███████╗███████╗██╗███████╗████████╗\n";
+    cout << " ██╔════╝██╔══██╗██║████╗ ████║██╔════╝██╔══██╗██╔════╝██╔════╝██║██╔════╝╚══██╔══╝\n";
+    cout << " ██║     ██████╔╝██║██╔████╔██║█████╗  ███████║███████╗███████╗██║███████╗   ██║   \n";
+    cout << " ██║     ██╔══██╗██║██║╚██╔╝██║██╔══╝  ██╔══██║╚════██║╚════██║██║╚════██║   ██║   \n";
+    cout << " ╚██████╗██║  ██║██║██║ ╚═╝ ██║███████╗██║  ██║███████║███████║██║███████║   ██║   \n";
+    cout << "  ╚═════╝╚═╝  ╚═╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚══════╝╚══════╝╚═╝╚══════╝   ╚═╝   \n";
+
+
+    cout << "\n";
+    cout << "             🦄 A N O N Y M O U S   C R I M E   E V I D E N C E\n";
+    cout << "                    & C A S E   M A N A G E M E N T \n";
+    cout << "\n";
+    cout << "==========================================================================\n";
+    cout << "                 SECURE  |  ANONYMOUS  |  RELIABLE\n";
+    cout << "==========================================================================\n\n";
+
+    cout << "        Initializing CrimeAssist System...\n\n";
+
+    cout << "        [1/4] Loading system modules       ";
+cout.flush();
+
+for (int i = 0; i < 3; i++)
+{
+    cout << ".";
+    cout.flush();
+    this_thread::sleep_for(chrono::milliseconds(250));
+}
+
+cout << "\b\b\b   ";
+cout << "\033[38;5;205mOK\033[0m\n";
+
+cout << "        [2/4] Loading case management      ";
+cout.flush();
+
+for (int i = 0; i < 3; i++)
+{
+    cout << ".";
+    cout.flush();
+    this_thread::sleep_for(chrono::milliseconds(250));
+}
+
+cout << "\b\b\b   ";
+cout << "\033[38;5;205mOK\033[0m\n";
+
+cout << "        [3/4] Loading evidence system      ";
+cout.flush();
+
+for (int i = 0; i < 3; i++)
+{
+    cout << ".";
+    cout.flush();
+    this_thread::sleep_for(chrono::milliseconds(250));
+}
+
+cout << "\b\b\b   ";
+cout << "\033[38;5;205mOK\033[0m\n";
+
+cout << "        [4/4] Loading user management      ";
+cout.flush();
+
+for (int i = 0; i < 3; i++)
+{
+    cout << ".";
+    cout.flush();
+    this_thread::sleep_for(chrono::milliseconds(250));
+}
+
+cout << "\b\b\b   ";
+cout << "\033[38;5;205mOK\033[0m\n";
+    cout << "\n";
+    cout << "==========================================================================\n";
+cout << "\033[38;5;205mOK\033[0m\n";
+cout << "                         SYSTEM READY\n";
+cout << "\033[0m";    
+cout << "==========================================================================\n\n";
+
+cout << "\033[38;5;205mOK\033[0m\n";
+cout << "                     Press ENTER to continue...";
+cout << "\033[0m";
+
+
+    cin.get();
+}
+
 int main() {
+    welcomeScreen();
 
     mainMenu();
 
