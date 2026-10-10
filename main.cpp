@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <cstdlib>
 #include <filesystem> 
 #include <limits>        // for timestamp 
 #include <thread>        // both thread and chrono for welcome screen 
@@ -8,12 +9,27 @@
 
 
 using namespace std;
+
 #ifdef _WIN32
 #include <conio.h>
 #else                          // conditional compilation
 #include <termios.h>          // allows us to control how the terminal behaves
 #include <unistd.h>
 #endif
+
+
+void clearScreen()
+{
+    #ifdef _WIN32
+        system("cls");       // Windows
+    #elif __APPLE__
+        system("clear");     // macOS
+    #elif __linux__
+        system("clear");     // Linux
+    #else
+        cout << "\033[2J\033[H";    // ANSI escape sequence
+    #endif
+}
 
 
 string getPassword()
@@ -23,11 +39,11 @@ string getPassword()
 
 #ifdef _WIN32
 
-    while (true)
+    while (true)        
     {
         ch = _getch();
 
-        if (ch == '\r')
+        if (ch == '\r')       
         {
             break;
         }
@@ -158,18 +174,22 @@ void helpMenu();
 void welcomeScreen();
 
 // common for both officer and admin
-void displayCaseStatistics() {
+
+void displayCaseStatistics()
+{
     ifstream file("cases.txt");
 
-    if (!file) {
+    if (!file)
+    {
         cout << "\n========== CASE STATISTICS ==========\n";
         cout << "No case data available yet.\n";
         return;
     }
 
     string line;
-    string remaining;
+    string caseID;
     string status;
+    string caseIDs;
 
     int totalCases = 0;
     int waitingVerification = 0;
@@ -180,61 +200,117 @@ void displayCaseStatistics() {
     int reinvestigating = 0;
     int closed = 0;
 
-    // Skip header
+    string waitingIDs = "";
+    string verifiedIDs = "";
+    string ongoingIDs = "";
+    string rejectedIDs = "";
+    string closureIDs = "";
+    string reinvestigatingIDs = "";
+    string closedIDs = "";
+
+    // Skip the header
     getline(file, line);
 
-    while (getline(file, line)) {
-
-        if (line.empty()) {
+    while (getline(file, line))
+    {
+        if (line.empty())
+        {
             continue;
         }
 
+        // Extract Case ID
+        size_t pos = line.find('|');
+
+        if (pos == string::npos)
+        {
+            continue;
+        }
+
+        caseID = line.substr(0, pos);
+
+        // Extract Status
+        pos = line.rfind('|');
+
+        if (pos == string::npos)
+        {
+            continue;
+        }
+
+        status = line.substr(pos + 1);
+
         totalCases++;
 
-        // Remove Case ID
-        size_t pos = line.find('|');
-        remaining = line.substr(pos + 1);
-
-        // Get Status
-        pos = remaining.rfind('|');
-        status = remaining.substr(pos + 1);
-
-        if (status == "Waiting Verification") {
+        if (status == "Waiting Verification")
+        {
             waitingVerification++;
+            caseIDs = waitingIDs;
+            waitingIDs += (caseIDs.empty() ? "" : ", ") + caseID;
         }
-        else if (status == "Verified") {
+        else if (status == "Verified")
+        {
             verified++;
+            caseIDs = verifiedIDs;
+            verifiedIDs += (caseIDs.empty() ? "" : ", ") + caseID;
         }
-        else if (status == "Ongoing Investigation") {
+        else if (status == "Ongoing Investigation")
+        {
             ongoingInvestigation++;
+            caseIDs = ongoingIDs;
+            ongoingIDs += (caseIDs.empty() ? "" : ", ") + caseID;
         }
-        else if (status == "Rejected") {
+        else if (status == "Rejected")
+        {
             rejected++;
+            caseIDs = rejectedIDs;
+            rejectedIDs += (caseIDs.empty() ? "" : ", ") + caseID;
         }
-        else if (status == "Case Closure Request") {
+        else if (status == "Case Closure Request")
+        {
             closureRequest++;
+            caseIDs = closureIDs;
+            closureIDs += (caseIDs.empty() ? "" : ", ") + caseID;
         }
-        else if (status == "Reinvestigating") {
+        else if (status == "Reinvestigating")
+        {
             reinvestigating++;
+            caseIDs = reinvestigatingIDs;
+            reinvestigatingIDs += (caseIDs.empty() ? "" : ", ") + caseID;
         }
-        else if (status == "Case Closed") {
+        else if (status == "Case Closed")
+        {
             closed++;
+            caseIDs = closedIDs;
+            closedIDs += (caseIDs.empty() ? "" : ", ") + caseID;
         }
     }
 
     file.close();
 
     cout << "\n========== CASE STATISTICS ==========\n";
+    cout << "Total Cases: " << totalCases << "\n\n";
 
-    cout << "Total Cases: " << totalCases << endl;
     cout << "Waiting Verification: " << waitingVerification << endl;
+    cout << "Case IDs: " << (waitingIDs.empty() ? "None" : waitingIDs) << "\n\n";
+
     cout << "Verified: " << verified << endl;
+    cout << "Case IDs: " << (verifiedIDs.empty() ? "None" : verifiedIDs) << "\n\n";
+
     cout << "Ongoing Investigation: " << ongoingInvestigation << endl;
+    cout << "Case IDs: " << (ongoingIDs.empty() ? "None" : ongoingIDs) << "\n\n";
+
     cout << "Rejected: " << rejected << endl;
+    cout << "Case IDs: " << (rejectedIDs.empty() ? "None" : rejectedIDs) << "\n\n";
+
     cout << "Case Closure Request: " << closureRequest << endl;
+    cout << "Case IDs: " << (closureIDs.empty() ? "None" : closureIDs) << "\n\n";
+
     cout << "Reinvestigating: " << reinvestigating << endl;
+    cout << "Case IDs: " << (reinvestigatingIDs.empty() ? "None" : reinvestigatingIDs) << "\n\n";
+
     cout << "Case Closed: " << closed << endl;
+    cout << "Case IDs: " << (closedIDs.empty() ? "None" : closedIDs) << endl;
 }
+
 
 bool checkEvidenceTimestamp(string evidencePath) {
 
@@ -352,7 +428,7 @@ void searchCaseByID() {
     }
 }
 void Admin::adminVerify() {
-
+clearScreen();
 cout << "\n";
 cout << "==========================================================================\n";
 cout << "\033[38;5;205m";
@@ -418,7 +494,7 @@ void Admin::addOfficer() {
 
 
 void Admin::adminMenu() {
-
+clearScreen();
     int choice;
     int adminChoice;
 
@@ -446,10 +522,10 @@ cout << "        Enter your choice: ";
         if (choice == 1) {
 
             while (true) {
-                cout << "\033[38;5;205m";
+               
 
                 cout << "\n===== MANAGE OFFICERS =====\n";
-                cout << "\033[0m";
+             
                 cout << "1. Add Officer" << endl;
                 cout << "2. Update Officer Information" << endl;
                 cout << "3. Delete Officer" << endl;
@@ -1469,6 +1545,7 @@ void Admin::caseStatistics() {
     displayCaseStatistics();
 }
 void Officer::officerMenu() {
+    clearScreen();
     int choice;
 
     while (true) {
@@ -1527,6 +1604,7 @@ cout << "        Enter your choice: ";
 
 
 void Officer::officerVerify() {
+    clearScreen();
     int enteredID;
     string enteredUsername;
     string enteredPassword;
@@ -1938,6 +2016,7 @@ void Officer::requestCaseClosure() {
 
 
 void User::userVerify() {
+    clearScreen();
 
     string enteredUsername;
     string enteredPassword;
@@ -1991,7 +2070,7 @@ enteredPassword = getPassword();
     }
 }
 void User::userMenu() {
-
+clearScreen();
     int choice;
 
     while (true) {
@@ -2094,6 +2173,7 @@ newPassword = getPassword();
     cout << "You can now login." << endl;
 }
 void User::userAuthMenu() {
+    clearScreen();
 
     int choice;
 

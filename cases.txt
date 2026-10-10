@@ -3,4 +3,5 @@ CaseID|CrimeType|Location|DateTime|Description|Evidence|Status
 2|sf|f|ef|e|e|Ongoing Investigation
 5|fr|frf||f|ds|Case Closed
 1||wsw||w|w|Ongoing Investigation
-2||d|d|dd|s|Waiting Verification
+2||d|d|dd|s|Ongoing Investigation
+34567|bike theft|pepsicola|2083-02-20: 8:20|the bike was of color red|photo.jpg|Case Closure Requestgdhdjhgfdhjghsgh
